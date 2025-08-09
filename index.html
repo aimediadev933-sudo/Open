@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OF@TEIN+ | Open Federated Playground for Future Networks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #9A2AA0;
+            --secondary: #DA3FA3;
+            --body: #FCF5EC;
+            --text: #1D1D1B;
+            --secondary-dark: #4E245C;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--body);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(154, 42, 160, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--white);
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: slideInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            animation: slideInUp 1s ease-out 0.3s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--white);
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            animation: slideInUp 1s ease-out 0.6s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+            background: var(--light-gray);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Sections */
+        .section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+            box-shadow: 0 10px 40px rgba(154, 42, 160, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(154, 42, 160, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(154, 42, 160, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card p {
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* Countries Section */
+        .countries {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            box-shadow: 0 10px 40px rgba(154, 42, 160, 0.1);
+        }
+
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .country-tag {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .country-tag:hover {
+            transform: scale(1.05);
+        }
+
+        /* SDG Section */
+        .sdg-section {
+            background: linear-gradient(135deg, var(--secondary-dark), var(--primary));
+            color: var(--white);
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .sdg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .sdg-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sdg-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--secondary-dark);
+            color: var(--white);
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 2rem;
+            margin-top: 2rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .countries-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero {
+                padding: 7rem 1rem 5rem;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .card {
+                padding: 2rem;
+            }
+
+            .countries-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Scroll animations */
+        @media (prefers-reduced-motion: no-preference) {
+            .card, .stat-item, .country-tag {
+                opacity: 0;
+                transform: translateY(30px);
+                animation: fadeInUp 0.6s ease-out forwards;
+            }
+
+            .card:nth-child(1) { animation-delay: 0.1s; }
+            .card:nth-child(2) { animation-delay: 0.2s; }
+            .card:nth-child(3) { animation-delay: 0.3s; }
+
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">OF@TEIN+</div>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#activities">Activities</a></li>
+                    <li><a href="#outcomes">Outcomes</a></li>
+                    <li><a href="#partners">Partners</a></li>
+                </ul>
+                <div class="mobile-menu-toggle" id="mobileToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>OF@TEIN+</h1>
+            <p>Open Federated Playground for Future Networks</p>
+            <p>Building sustainable, federated testbed for SDN/NFV/Cloud-integrated research across Asia</p>
+            <a href="#about" class="cta-button">Explore the Platform</a>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section">
+        <div class="container">
+            <div class="stats">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">12+</span>
+                        <span class="stat-label">Countries</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">20+</span>
+                        <span class="stat-label">Institutions</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">60+</span>
+                        <span class="stat-label">Participants Trained</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">36</span>
+                        <span class="stat-label">Student Fellows</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <h2 class="section-title">Project Overview</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Mission</h3>
+                    <p>Building upon the original OF@TEIN project to create an open, federated, SDN/NFV/Cloud-integrated testbed spanning across Asia. We enable TEIN-connected countries to collaborate on future Internet research through innovative infrastructure deployment.</p>
+                </div>
+                <div class="card">
+                    <h3>Innovation</h3>
+                    <p>Deploying SmartX Boxes and DataLake infrastructures at academic institutions, emphasizing DevOps-style operations, capacity building, and experimentation on federated infrastructure with advanced visualization tools.</p>
+                </div>
+                <div class="card">
+                    <h3>Collaboration</h3>
+                    <p>Ambassadors, players, and student fellows lead training, operations, and R&D efforts. GitHub, Facebook groups, and ticketing systems enhance collaborative operations across multiple timezones and countries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Activities Section -->
+    <section class="section" id="activities">
+        <div class="container">
+            <h2 class="section-title">Key Activities</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>SmartX Deployment</h3>
+                    <p>Deployed SmartX boxes and microboxes across over 12 countries, including new access centers and upgraded core sites to enable federated experimentation infrastructure.</p>
+                </div>
+                <div class="card">
+                    <h3>DataLake Systems</h3>
+                    <p>Built centralized and high-availability DataLakes at GIST, UM, and NCKU to support monitoring, visualization, and DevOps-style automated testbed operations.</p>
+                </div>
+                <div class="card">
+                    <h3>Training & Workshops</h3>
+                    <p>Conducted training on SmartX usage, ONOS, DevOps, multipath routing, SDX orchestration, and data visualization across partner institutions with over 60 participants.</p>
+                </div>
+                <div class="card">
+                    <h3>Student Exchange</h3>
+                    <p>36 student fellows engaged in short-term exchanges and testbed experiments, promoting technical learning and cross-border collaboration in IoT/Cloud integration.</p>
+                </div>
+                <div class="card">
+                    <h3>Community Building</h3>
+                    <p>Launched GitHub repositories, helpdesk systems, and shared automation scripts to empower partner sites with open-source resources for testbed management.</p>
+                </div>
+                <div class="card">
+                    <h3>Research Groups</h3>
+                    <p>Formed developer groups focused on SDX fabrics, IoT/SDN, SmartX orchestration, and performance visualization, supporting real-time experimentation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Outcomes Section -->
+    <section class="section" id="outcomes">
+        <div class="container">
+            <h2 class="section-title">Key Outcomes</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Federated Testbed</h3>
+                    <p>A scalable, federated testbed deployed across 12+ countries, supporting research on SDN, NFV, and Cloud networking via SmartX infrastructure and distributed architectures.</p>
+                </div>
+                <div class="card">
+                    <h3>Capacity Building</h3>
+                    <p>Trained over 50 researchers and students in DevOps, network orchestration, and smart box deployment across regional hubs via student exchange programs.</p>
+                </div>
+                <div class="card">
+                    <h3>Open Innovation</h3>
+                    <p>Community software and automation tools launched through GitHub repositories, empowering collaborative development and knowledge sharing across the network.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="section" id="partners">
+        <div class="container">
+            <h2 class="section-title">Participating Countries</h2>
+            <div class="countries">
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem; color: var(--primary); font-weight: 600;">13 Countries Collaborating on Future Networks Research</p>
+                <div class="countries-grid">
+                    <div class="country-tag">Malaysia</div>
+                    <div class="country-tag">Korea</div>
+                    <div class="country-tag">Thailand</div>
+                    <div class="country-tag">Taiwan</div>
+                    <div class="country-tag">Vietnam</div>
+                    <div class="country-tag">Myanmar</div>
+                    <div class="country-tag">Laos</div>
+                    <div class="country-tag">Cambodia</div>
+                    <div class="country-tag">Bhutan</div>
+                    <div class="country-tag">India</div>
+                    <div class="country-tag">Indonesia</div>
+                    <div class="country-tag">Pakistan</div>
+                    <div class="country-tag">Philippines</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SDG Section -->
+    <section class="section">
+        <div class="container">
+            <div class="sdg-section">
+                <h2 style="color: white; margin-bottom: 1rem;">Supporting UN Sustainable Development Goals</h2>
+                <p style="font-size: 1.2rem; opacity: 0.9;">Our work contributes to global sustainable development through education, innovation, and partnerships</p>
+                <div class="sdg-grid">
+                    <div class="sdg-item">
+                        <div class="sdg-number">SDG 4</div>
+                        <h4>Quality Education</h4>
+                        <p>Enhancing technical education through hands-on training and student exchange programs</p>
+                    </div>
+                    <div class="sdg-item">
+                        <div class="sdg-number">SDG 9</div>
+                        <h4>Industry, Innovation & Infrastructure</h4>
+                        <p>Building resilient infrastructure and fostering innovation in network technologies</p>
+                    </div>
+                    <div class="sdg-item">
+                        <div class="sdg-number">SDG 17</div>
+                        <h4>Partnerships for the Goals</h4>
+                        <p>Strengthening global partnerships for sustainable development through collaboration</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Lead Institutions</h4>
+                    <ul>
+                        <li>University of Malaya</li>
+                        <li>GIST (Korea)</li>
+                        <li>NCKU (Taiwan)</li>
+                        <li>Chulalongkorn University</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Regional Partners</h4>
+                    <ul>
+                        <li>MYREN, KOREN</li>
+                        <li>PERN, UNINET</li>
+                        <li>ERNET, LEARN</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Project Category</h4>
+                    <ul>
+                        <li>WP4 - 1st Call</li>
+                        <li>Future Networks Research</li>
+                        <li>SDN/NFV/Cloud Integration</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OF@TEIN+ Project. Open Federated Playground for Future Networks.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+                // Close mobile menu after click
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Add scroll effect to header
+        let lastScrollTop = 0;
+        const header = document.querySelector('.header');
+
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe cards for animations
+        document.querySelectorAll('.card, .stat-item, .country-tag').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Counter animation for stats
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/\D/g, ''));
+                const increment = target / 100;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    
+                    const suffix = counter.textContent.includes('+') ? '+' : '';
+                    counter.textContent = Math.floor(current) + suffix;
+                }, 20);
+            });
+        }
+
+        // Trigger counter animation when stats section is visible
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            statsObserver.observe(statsSection);
+        }
+    </script>
+</body>
+</html>
